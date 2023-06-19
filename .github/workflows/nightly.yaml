@@ -1,0 +1,33 @@
+---
+name: Conductor Nightly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 3 * * *
+
+env:
+  CONDUCTOR_URL: https://github.com/Netflix/conductor
+  CONDUCTOR_BRANCH: current
+  CONDUCTOR_BUILD_BY: 330372+lewis-green-bot[bot]@users.noreply.github.com
+  CONDUCTOR_BUILD_TYPE: nightly
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Token
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+        id: generate-token
+        with:
+          app_id: "${{ secrets.BOT_APP_ID }}"
+          private_key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
+
+      - name: Setup variables
+        id: vars
+        run: |
+          build_date=$(date +%Y%m%d%H%M)
+          echo "tag-name=${{ env.CONDUCTOR_BUILD_TYPE }}-${build_date}" >> "$GITHUB_OUTPUT"
+
+      - name: Clone conductor
+        run: git clone -b ${{ env.CONDUCTOR_BRANCH }} --single-branch ${{ env.CONDUCTOR_URL }}
