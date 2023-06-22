@@ -14,7 +14,8 @@ env:
   CONDUCTOR_BUILD_BY: 330372+lewis-green-bot[bot]@users.noreply.github.com
   CONDUCTOR_BUILD_TYPE: nightly
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME_SERVER: conductor-server
+  IMAGE_NAME_UI: conductor-ui
 
 jobs:
   release:
@@ -43,17 +44,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
+      - name: Extract metadata (tags, labels) for Docker (SERVER)
+        id: meta_server
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_SERVER }}
 
-      - name: Build and push server Docker image
+      - name: Extract metadata (tags, labels) for Docker (UI)
+        id: meta_ui
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_SERVER }}
+
+      - name: Build and push server Docker image (SERVER)
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: conductor
           file: conductor/docker/server/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_server.outputs.tags }}
+          labels: ${{ steps.meta_server.outputs.labels }}
+
+      - name: Build and push server Docker image (UI)
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: conductor
+          file: conductor/docker/ui/Dockerfile
+          push: true
+          tags: ${{ steps.meta_ui.outputs.tags }}
+          labels: ${{ steps.meta_ui.outputs.labels }}
