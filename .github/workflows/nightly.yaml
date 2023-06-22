@@ -14,8 +14,8 @@ env:
   CONDUCTOR_BUILD_BY: 330372+lewis-green-bot[bot]@users.noreply.github.com
   CONDUCTOR_BUILD_TYPE: nightly
   REGISTRY: ghcr.io
-  IMAGE_NAME_SERVER: conductorserver
-  IMAGE_NAME_UI: conductorui
+  IMAGE_NAME_SERVER: conductor-server
+  IMAGE_NAME_UI: conductor-ui
 
 jobs:
   release:
@@ -61,8 +61,10 @@ jobs:
         with:
           context: conductor
           file: conductor/docker/server/Dockerfile
-          push: true
-          tags: ${{ steps.meta_server.outputs.tags }}
+          push: true          
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_SERVER }}:${{steps.meta_server.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_SERVER }}:latest
           labels: ${{ steps.meta_server.outputs.labels }}
 
       - name: Build and push server Docker image (UI)
@@ -71,5 +73,7 @@ jobs:
           context: conductor
           file: conductor/docker/ui/Dockerfile
           push: true
-          tags: ${{ steps.meta_ui.outputs.tags }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_UI }}:${{steps.meta_ui.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_UI }}:latest
           labels: ${{ steps.meta_ui.outputs.labels }}
