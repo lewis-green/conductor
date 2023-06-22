@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: 0 3 * * *
+    
+permissions: write-all
 
 env:
   CONDUCTOR_URL: https://github.com/Netflix/conductor
