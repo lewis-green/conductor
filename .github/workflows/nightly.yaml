@@ -14,8 +14,8 @@ env:
   CONDUCTOR_BUILD_BY: 330372+lewis-green-bot[bot]@users.noreply.github.com
   CONDUCTOR_BUILD_TYPE: nightly
   REGISTRY: ghcr.io
-  IMAGE_NAME_SERVER: conductor-server
-  IMAGE_NAME_UI: conductor-ui
+  IMAGE_NAME_SERVER: conductorserver
+  IMAGE_NAME_UI: conductorui
 
 jobs:
   release:
