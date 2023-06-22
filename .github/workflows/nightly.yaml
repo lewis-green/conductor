@@ -38,7 +38,7 @@ jobs:
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
+          username: ${{ env.CONDUCTOR_BUILD_BY }}
           password: ${{ steps.generate-token.outputs.token }}
 
       - name: Extract metadata (tags, labels) for Docker
@@ -53,5 +53,5 @@ jobs:
           context: conductor
           file: conductor/docker/server/Dockerfile
           push: true
-          tags: ${{ env.CONDUCTOR_BUILD_BY }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
