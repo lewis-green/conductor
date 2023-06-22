@@ -8,7 +8,7 @@ on:
 
 env:
   CONDUCTOR_URL: https://github.com/Netflix/conductor
-  CONDUCTOR_BRANCH: current
+  CONDUCTOR_BRANCH: main
   CONDUCTOR_BUILD_BY: 330372+lewis-green-bot[bot]@users.noreply.github.com
   CONDUCTOR_BUILD_TYPE: nightly
 
