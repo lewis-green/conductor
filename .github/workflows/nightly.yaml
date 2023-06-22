@@ -44,18 +44,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker (SERVER)
-        id: meta_server
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_SERVER }}
-
-      - name: Extract metadata (tags, labels) for Docker (UI)
-        id: meta_ui
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_SERVER }}
-
       - name: Build and push server Docker image (SERVER)
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
@@ -63,7 +51,6 @@ jobs:
           file: conductor/docker/server/Dockerfile
           push: true          
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_SERVER }}:${{steps.meta_server.outputs.tags }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_SERVER }}:latest
           labels: ${{ steps.meta_server.outputs.labels }}
 
@@ -74,6 +61,5 @@ jobs:
           file: conductor/docker/ui/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_UI }}:${{steps.meta_ui.outputs.tags }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_UI }}:latest
           labels: ${{ steps.meta_ui.outputs.labels }}
